@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(QTRGBShow LANGUAGES CXX)
+project(qt5RGBShow LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -27,7 +27,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 if(ANDROID)
-  add_library(QTRGBShow SHARED
+  add_library(qt5RGBShow SHARED
     main.cpp
     mainwindow.cpp
     mainwindow.h
@@ -35,7 +35,7 @@ if(ANDROID)
     fastpixel.h
   )
 else()
-  add_executable(QTRGBShow
+  add_executable(qt5RGBShow
     main.cpp
     mainwindow.cpp
     mainwindow.h
@@ -44,4 +44,4 @@ else()
   )
 endif()
 
-target_link_libraries(QTRGBShow PRIVATE Qt5::Widgets)
+target_link_libraries(qt5RGBShow PRIVATE Qt5::Widgets)
