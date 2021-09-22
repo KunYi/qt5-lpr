@@ -9,13 +9,19 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      fp(NULL)
+      saveImage(nullptr),
+      fp(nullptr)
 {
     initUI();
 }
 
 MainWindow::~MainWindow()
 {
+    if (saveImage != nullptr)
+        delete saveImage;
+
+    if (fp != nullptr)
+        delete fp;
 }
 
 void MainWindow::initUI()
@@ -34,6 +40,10 @@ void MainWindow::initUI()
     mainStatusLabel->setText("Image Information will be here!");
 
     createActions();
+    // for mouse right
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showContextMenu(const QPoint &)));
 }
 
 void MainWindow::createActions()
@@ -79,6 +89,26 @@ void MainWindow::openImage()
     }
 }
 
+void MainWindow::saveToFile()
+{
+    if (saveImage == nullptr)
+        return;
+
+    QFileDialog dialog(this, tr("Save Image"), QString(),
+                       tr("Images (*.png *.bmp *.jpg)"));
+    dialog.setDefaultSuffix(".png");
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    QString fileName;
+    if (dialog.exec()) {
+        fileName = dialog.selectedFiles().front();
+    }
+
+    if (fileName.isEmpty() || fileName.isNull())
+        return;
+
+    saveImage->save(fileName);
+}
+
 void MainWindow::showImage(QString path)
 {
     imageScene->clear();
@@ -99,98 +129,118 @@ void MainWindow::showImage(QString path)
 
 void MainWindow::showGrayRed()
 {
-    if(fp != nullptr) {
-        QPixmap *image = new QPixmap();
-        QImage *img = fp->grayRed();
-        image->convertFromImage(*img);
-        imageScene->addPixmap(*image);
-        imageScene->update();
-        imageView->setSceneRect(image->rect());
-        delete img;
-        delete image;
-    }
+    if (fp == nullptr) return;
+
+    QPixmap *image = new QPixmap();
+    QImage *img = fp->grayRed();
+    image->convertFromImage(*img);
+    imageScene->addPixmap(*image);
+    imageScene->update();
+    imageView->setSceneRect(image->rect());
+    keepImage(img);
+    delete image;
 }
 
 void MainWindow::showGrayGreen()
 {
-    if(fp != nullptr) {
-        QPixmap *image = new QPixmap();
-        QImage *img = fp->grayGreen();
-        image->convertFromImage(*img);
-        imageScene->addPixmap(*image);
-        imageScene->update();
-        imageView->setSceneRect(image->rect());
-        delete img;
-        delete image;
-    }
+    if (fp == nullptr) return;
+
+    QPixmap *image = new QPixmap();
+    QImage *img = fp->grayGreen();
+    image->convertFromImage(*img);
+    imageScene->addPixmap(*image);
+    imageScene->update();
+    imageView->setSceneRect(image->rect());
+    keepImage(img);
+    delete image;
 }
 
 void MainWindow::showGrayBlue()
 {
-    if(fp != nullptr) {
-        QPixmap *image = new QPixmap();
-        QImage *img = fp->grayBlue();
-        image->convertFromImage(*img);
-        imageScene->addPixmap(*image);
-        imageScene->update();
-        imageView->setSceneRect(image->rect());
-        delete img;
-        delete image;
-    }
+    if (fp == nullptr) return;
+
+    QPixmap *image = new QPixmap();
+    QImage *img = fp->grayBlue();
+    image->convertFromImage(*img);
+    imageScene->addPixmap(*image);
+    imageScene->update();
+    imageView->setSceneRect(image->rect());
+    keepImage(img);
+    delete image;
 }
 
 void MainWindow::showGrayRGB()
 {
-    if(fp != nullptr) {
-        QPixmap *image = new QPixmap();
-        QImage *img = fp->grayRGB();
-        image->convertFromImage(*img);
-        imageScene->addPixmap(*image);
-        imageScene->update();
-        imageView->setSceneRect(image->rect());
-        delete img;
-        delete image;
-    }
+    if (fp == nullptr) return;
+
+    QPixmap *image = new QPixmap();
+    QImage *img = fp->grayRGB();
+    image->convertFromImage(*img);
+    imageScene->addPixmap(*image);
+    imageScene->update();
+    imageView->setSceneRect(image->rect());
+    keepImage(img);
+    delete image;
 }
 
 void MainWindow::showGrayRGLow()
 {
-    if(fp != nullptr) {
-        QPixmap *image = new QPixmap();
-        QImage *img = fp->grayRGLow();
-        image->convertFromImage(*img);
-        imageScene->addPixmap(*image);
-        imageScene->update();
-        imageView->setSceneRect(image->rect());
-        delete img;
-        delete image;
-    }
+    if (fp == nullptr) return;
+
+    QPixmap *image = new QPixmap();
+    QImage *img = fp->grayRGLow();
+    image->convertFromImage(*img);
+    imageScene->addPixmap(*image);
+    imageScene->update();
+    imageView->setSceneRect(image->rect());
+    keepImage(img);
+    delete image;
 }
 
 void MainWindow::showBinary()
 {
-    if(fp != nullptr) {
-        QPixmap *image = new QPixmap();
-        QImage *img = fp->binary();
-        image->convertFromImage(*img);
-        imageScene->addPixmap(*image);
-        imageScene->update();
-        imageView->setSceneRect(image->rect());
-        delete img;
-        delete image;
-    }
+    if (fp == nullptr) return;
+
+    QPixmap *image = new QPixmap();
+    QImage *img = fp->binary();
+    image->convertFromImage(*img);
+    imageScene->addPixmap(*image);
+    imageScene->update();
+    imageView->setSceneRect(image->rect());
+    keepImage(img);
+    delete image;
 }
 
 void MainWindow::showNegative()
 {
-    if(fp != nullptr) {
-        QPixmap *image = new QPixmap();
-        QImage *img = fp->negative();
-        image->convertFromImage(*img);
-        imageScene->addPixmap(*image);
-        imageScene->update();
-        imageView->setSceneRect(image->rect());
-        delete img;
-        delete image;
-    }
+    if (fp == nullptr) return;
+
+    QPixmap *image = new QPixmap();
+    QImage *img = fp->negative();
+    image->convertFromImage(*img);
+    imageScene->addPixmap(*image);
+    imageScene->update();
+    imageView->setSceneRect(image->rect());
+    keepImage(img);
+    delete image;
+}
+
+void MainWindow::showContextMenu(const QPoint &pos)
+{
+   if (fp == nullptr) return;
+
+   QMenu contextMenu(tr("Context menu"), this);
+
+   QAction action(tr("Save as file"), this);
+   connect(&action, SIGNAL(triggered(bool)), this, SLOT(saveToFile()));
+   contextMenu.addAction(&action);
+   contextMenu.exec(mapToGlobal(pos));
+}
+
+void MainWindow::keepImage(QImage *img)
+{
+    if (saveImage != nullptr)
+        delete saveImage;
+
+    saveImage = img;
 }

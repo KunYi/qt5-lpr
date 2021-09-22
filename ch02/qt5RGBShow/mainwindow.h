@@ -34,6 +34,9 @@ private slots:
     void showGrayRGLow(void);
     void showBinary(void);
     void showNegative(void);
+    // for mouse right click contextMenu
+    void showContextMenu(const QPoint &);
+    void saveToFile(void);
 
 private:
     QAction *ActionOpen;
@@ -51,8 +54,12 @@ private:
     QGraphicsScene *imageScene;
     QGraphicsView *imageView;
 
+    QImage *saveImage;
     QString currentImagePath;
     QGraphicsPixmapItem *currentImage;
     FastPixel *fp;
+
+private:
+    void keepImage(QImage *img);
 };
 #endif // MAINWINDOW_H
