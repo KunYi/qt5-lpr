@@ -39,6 +39,7 @@ private:
     int m_height;
 
     uint *m_Th; // Threshold
+    uchar *m_bin;
 
 public:
     int width(void) { return m_width; }

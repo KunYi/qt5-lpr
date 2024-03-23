@@ -7,6 +7,7 @@ FastPixel::FastPixel(QImage img) :
     ch_g(nullptr),
     ch_b(nullptr),
     m_Th(nullptr),
+    m_bin(nullptr),
     m_width(0),
     m_height(0)
 {
@@ -45,6 +46,8 @@ FastPixel::~FastPixel()
         delete[] ch_b;
     if (m_Th != nullptr)
         delete[] m_Th;
+    if (m_bin != nullptr)
+        delete[] m_bin;
 }
 
 QImage * FastPixel::gray(const uchar* tmp)
@@ -174,16 +177,32 @@ void FastPixel::calcThreshold(int gapDim)
 
 QImage *FastPixel::convBinary(int gapDim)
 {
-    if (m_Th == nullptr)
-      return (QImage *)nullptr;
+    if (m_Th == nullptr) {
+      this->calcThreshold(gapDim);
+    }
+
+    if (m_bin != nullptr) {
+        delete []m_bin;
+        m_bin = nullptr;
+    }
 
     const int w = data.width();
     const int h = data.height();
-    const uchar* chG = this->ch_g;
+    const uchar* ch = ch_g;
+    m_bin = new uchar[(w * h)];
+    memset(m_bin, 0, w * h);
     const int kw = (w / gapDim) + ((w % gapDim) != 0);
     const int kh = (h / gapDim) + ((h % gapDim) != 0);
-
-    return (QImage *)nullptr;
+    for (int y = 0; y < h; y++) {
+        const int i = (y / gapDim);
+        for(int x = 0; x < w; x++) {
+            const int j = (x / gapDim);
+            if (ch[y * w + x] < this->m_Th[i * kw + j])
+                m_bin[y * w + x] = 1;
+        }
+    }
+    QImage *img = BWImg(m_bin);
+    return img;
 }
 
 QImage *FastPixel::binary()

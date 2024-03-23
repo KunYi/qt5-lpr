@@ -208,32 +208,8 @@ void MainWindow::showBinary()
 {
     if (fp == nullptr) return;
 
-    //QImage *img = fp->grayGreen();
-
-    if (mTh == nullptr) return;
-
-    const int w = fp->width();
-    const int h = fp->height();
-    const uchar* chG = fp->ch_g;
-    const int csize = w * h;
-    const int kw = (w / gapDim) + ((w % gapDim) != 0);
-    const int kh = (h / gapDim) + ((h % gapDim) != 0);
-    const int ksize = kw * kh;
-
-    if (mZ != nullptr) delete[] mZ;
-    mZ = new uchar[csize];
-    memset(mZ, 0, csize);
-    for (int y = 0; y < h; y++) {
-        const int i = (y / gapDim);
-        for(int x = 0; x < w; x++) {
-            const int j = (x / gapDim);
-            if (chG[y * w + x] < mTh[i * kw + j])
-                mZ[y * w + x] = 1;
-        }
-    }
-
     QPixmap *image = new QPixmap();
-    QImage *img = fp->BWImg(mZ);
+    QImage *img = fp->convBinary(gapDim);
     image->convertFromImage(*img);
     imageScene->addPixmap(*image);
     imageScene->update();
