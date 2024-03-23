@@ -112,7 +112,7 @@ void MainWindow::saveToFile()
 void MainWindow::showImage(QString path)
 {
     imageScene->clear();
-    imageView->resetMatrix();
+    imageView->resetTransform();
     QImage image(path);
     QPixmap img(image.width(), image.height());
     img.convertFromImage(image);

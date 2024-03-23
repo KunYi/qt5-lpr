@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
       saveImage(nullptr),
       fp(nullptr),
       mTh(nullptr),
-      mZ(nullptr)
+      mZ(nullptr),
+      mO(nullptr)
 {
     initUI();
 }
@@ -29,6 +30,9 @@ MainWindow::~MainWindow()
 
     if (mZ != nullptr)
         delete[] mZ;
+
+    if (mO != nullptr)
+        delete[] mO;
 }
 
 void MainWindow::initUI()
@@ -113,7 +117,7 @@ void MainWindow::saveToFile()
 void MainWindow::showImage(QString path)
 {
     imageScene->clear();
-    imageView->resetMatrix();
+    imageView->resetTransform();
 
     QImage image(path);
 
