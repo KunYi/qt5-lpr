@@ -245,3 +245,44 @@ QImage *FastPixel::negative()
     delete[] tmp;
     return img;
 }
+
+std::vector<Point> FastPixel::getGroup(const unsigned char *q, int x, int y) {
+    const int w = data.width();
+    const int h = data.height();
+
+    if ((q == nullptr) ||
+        ((x >= w) || (y >= h)) ||
+        (*(q + x + (y * w))  == 0))
+      return {};
+
+    unsigned char *b = new unsigned char[w * h]; // Create a copy of the input 2D array
+    memcpy(b, q, w * h * sizeof(unsigned char));
+
+    std::vector<Point> nc = { {x, y} }; // Initial starting point
+    *(b + x + (y * w)) = 0; // Clear the starting point marker
+
+    std::vector<Point> A = nc; // Set of all target points
+
+    do {
+        std::vector<Point> nb = nc; // Copy the current starting points
+        nc.clear(); // Clear the next set of starting points
+
+        for (const auto& p : nb) {
+            // Search in the 3x3 neighborhood around the current point
+            for (int i = std::max(p.x - 1, 0); i <= std::min(p.x + 1, w - 1); i++) {
+                for (int j = std::max(p.y - 1, 0); j <= std::min(p.y + 1, h - 1); j++) {
+                    if (*(b + i + (j * w)) == 0) continue; // Skip non-contour points
+
+                    Point k = {i, j}; // Create a new point
+                    nc.push_back(k); // Add to the next set of starting points
+                    A.push_back(k); // Add to the set of all target points
+                    *(b + i + (j * w)) = 0; // Clear the contour point marker
+                }
+            }
+        }
+    } while (!nc.empty()); // Continue if new contour points were found
+
+    delete[] b; // Free the dynamically allocated memory
+
+    return A; // Return the set of all target points
+}

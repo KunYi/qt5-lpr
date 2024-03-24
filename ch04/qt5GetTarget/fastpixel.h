@@ -3,6 +3,7 @@
 
 #include <QPixmap>
 #include <QBitmap>
+#include <vector>
 
 struct Point {
     int x, y;
@@ -48,7 +49,7 @@ public:
     QImage *gray(const uchar* tmp);
     QImage *BWImg(const uchar* tmp);
     QImage *convBinary(int gapDim);
-
+    std::vector<Point> getGroup(const unsigned char q[], int i, int j);
 public:
     uchar *ch_r;
     uchar *ch_g;
